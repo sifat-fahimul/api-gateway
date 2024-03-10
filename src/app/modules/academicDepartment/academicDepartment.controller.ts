@@ -1,0 +1,52 @@
+import { NextFunction, Request, Response } from 'express';
+import sendResponse from '../../../shared/response';
+import { AcademicDepartmentService } from './academicDepartment.service';
+
+const insertIntoDB = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await AcademicDepartmentService.insertIntoDB(req);
+    sendResponse(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+const getAllFromDB = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await AcademicDepartmentService.getAllFromDB(req);
+    sendResponse(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+const getSingleFromDB = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await AcademicDepartmentService.getSingleFromDB(req);
+    sendResponse(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+const updateIntoDB = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await AcademicDepartmentService.updateIntoDB(req);
+    sendResponse(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+const deleteFromDB = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await AcademicDepartmentService.deleteFromDB(req);
+    sendResponse(res, result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const AcademicDepartmentController = {
+  insertIntoDB,
+  getAllFromDB,
+  getSingleFromDB,
+  updateIntoDB,
+  deleteFromDB
+};
