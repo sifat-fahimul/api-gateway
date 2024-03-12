@@ -40,5 +40,38 @@ const createStudent = async (req: Request): Promise<IGenericResponse> => {
 
   return response.data;
 };
+const createFaculty = async (req: Request): Promise<IGenericResponse> => {
+  const file = req.file as IUploadFile;
+  const uploadedImage: ICloudinayResponse = await FileUploadHelper.uploadToCloudinary(file);
 
-export const UserService = { createStudent };
+  if (uploadedImage) {
+    req.body.profileImage = uploadedImage.secure_url;
+  }
+  const { academicDepartment, academicFaculty } = req.body.faculty;
+
+  const academicDepartmentResponse = await AuthService.get(
+    `/academic-department?syncId=${academicDepartment}`
+  );
+  if (academicDepartmentResponse.data.data && Array.isArray(academicDepartmentResponse.data.data)) {
+    req.body.faculty.academicDepartment = academicDepartmentResponse.data.data[0].id;
+  }
+
+  const academicFacultyResponse = await AuthService.get(
+    `/academic-faculty?syncId=${academicFaculty}`
+  );
+  if (academicFacultyResponse.data.data && Array.isArray(academicFacultyResponse.data.data)) {
+    req.body.faculty.academicFaculty = academicFacultyResponse.data.data[0].id;
+  }
+
+  // console.log('academicDepartmentResponse', academicDepartmentResponse.data);
+  // console.log('academicFacultyResponse', academicFacultyResponse.data);
+
+  // console.log('body', req.body);
+  const response: IGenericResponse = await AuthService.post('/users/create-faculty', req.body, {
+    headers: { Authorization: req.headers.authorization }
+  });
+
+  return response.data;
+};
+
+export const UserService = { createStudent, createFaculty };
